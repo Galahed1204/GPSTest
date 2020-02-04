@@ -15,14 +15,23 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
 import kotlinx.android.synthetic.main.activity_main.*
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.os.Handler
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
+
 
 
 class GPSService:IntentService("HelloIntentService"){
     val LOG_TAG = "gps1"
     private lateinit var listener: LocationListener
     private lateinit var locationManager: LocationManager
+    val handler = Handler()
 
     override fun onCreate() {
         super.onCreate()
@@ -55,13 +64,21 @@ class GPSService:IntentService("HelloIntentService"){
     override fun onHandleIntent(intent: Intent?) {
 
 
+//        ActivityCompat.requestPermissions(,arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 2)
 //        if (checkSelfPermission("ACCESS_FINE_LOCATION") == PackageManager.PERMISSION_GRANTED)
-//        requestPermissions(applicationContext,arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 2)
-//        locationManager.requestLocationUpdates(
-//            LocationManager.GPS_PROVIDER,
-//            1000,
-//            0f,
-//            listener)
+        for (i in 1..100)
+        handler.postDelayed({
+            try {
+
+                locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    1000,
+                    0f,
+                    listener)
+            }catch (e:SecurityException){}
+        }, 2000)
+
+
     }
 
 //    override fun onBind(intent: Intent?): IBinder? {
