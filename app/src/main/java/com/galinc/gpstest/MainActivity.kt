@@ -2,31 +2,20 @@ package com.galinc.gpstest
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import androidx.core.content.ContextCompat
+
 import kotlinx.android.synthetic.main.activity_main.*
 import android.location.LocationListener
 
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
-import android.content.Intent
-
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.location.Location
 import android.os.Build
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 
+import android.util.Log
 
 class MainActivity : AppCompatActivity() {
     private lateinit var listener: LocationListener
@@ -45,7 +34,10 @@ class MainActivity : AppCompatActivity() {
                 text_coordinate.setText(
                     "Location changed: Lat: " + location.getLatitude() + " Lng: "
                             + location.getLongitude()
+
                 )
+                Log.d("gps1","Location changed: Lat: " + location.getLatitude() + " Lng: "
+                        + location.getLongitude())
             }
 
             override fun onStatusChanged(s: String, i: Int, bundle: Bundle) {
@@ -86,12 +78,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         button.setOnClickListener {
-            locationManager.requestLocationUpdates(
-                "gps",
-                5000,
-                1f,
-                listener
-            )
+//            locationManager.requestLocationUpdates(
+//                LocationManager.GPS_PROVIDER,
+//                5000,
+//                1f,
+//                listener
+//            )
+            startService(Intent(this,GPSService::class.java))
         }
     }
 }
