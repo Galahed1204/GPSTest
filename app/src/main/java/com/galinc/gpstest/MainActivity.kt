@@ -20,13 +20,17 @@ import android.util.Log
 class MainActivity : AppCompatActivity() {
     private lateinit var listener: LocationListener
     private lateinit var locationManager: LocationManager
+    val LOG_TAG = "gps1"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 2)
+        requestPermissions(arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.INTERNET), 2)
 
 
         listener = object : LocationListener {
@@ -36,7 +40,7 @@ class MainActivity : AppCompatActivity() {
                             + location.getLongitude()
 
                 )
-                Log.d("gps1","Location changed: Lat: " + location.getLatitude() + " Lng: "
+                Log.d(LOG_TAG,"Location changed: Lat: " + location.getLatitude() + " Lng: "
                         + location.getLongitude())
             }
 
