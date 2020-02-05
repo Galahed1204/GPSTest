@@ -95,7 +95,7 @@ class GPSService:IntentService("HelloIntentService"){
         val path:File = Environment.getExternalStorageDirectory()
         file = File(path, "Download")
 //        file.mkdir()
-
+        Notification()
         //startForeground(ONGOING_NOTIFICATION_ID,Notification())
 
 //        for (i in 1..100)

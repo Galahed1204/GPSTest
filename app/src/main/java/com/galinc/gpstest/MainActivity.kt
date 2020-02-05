@@ -22,6 +22,13 @@ import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.os.Handler
 import java.util.*
 
+import androidx.core.app.NotificationCompat
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
+
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var listener: LocationListener
@@ -100,7 +107,14 @@ class MainActivity : AppCompatActivity() {
 //                1f,
 //                listener
 //            )
-            startService(Intent(this,GPSService::class.java))
+//            val builder = NotificationCompat.Builder(this)
+//                .setSmallIcon(R.mipmap.sym_def_app_icon)
+//                .setContentTitle("Title")
+//                .setContentText("Notification text")
+//
+//            val notification = builder.build()
+            startForegroundService(Intent(this,GPSService::class.java))
+//            startService(Intent(this,GPSService::class.java))
         }
 
         button2.setOnClickListener {

@@ -4,4 +4,5 @@
     <string name="button_gps_test_2">Получить координаты по другому</string>
     <string name="text_gps_test">Координаты не полученны</string>
 
+
 </resources>
