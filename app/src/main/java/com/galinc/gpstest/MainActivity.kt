@@ -16,6 +16,12 @@ import android.os.Build
 import androidx.core.app.ActivityCompat
 
 import android.util.Log
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+
+import android.os.Handler
+import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var listener: LocationListener
@@ -26,11 +32,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
+        applicationContext.filesDir
         requestPermissions(arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.INTERNET), 2)
+            Manifest.permission.INTERNET,
+            READ_EXTERNAL_STORAGE,
+            WRITE_EXTERNAL_STORAGE
+        ), 5)
+
+//        requestPermissions(arrayOf(READ_EXTERNAL_STORAGE), 2)
+//        requestPermissions(arrayOf(WRITE_EXTERNAL_STORAGE), 2)
 
 
         listener = object : LocationListener {
@@ -89,6 +101,24 @@ class MainActivity : AppCompatActivity() {
 //                listener
 //            )
             startService(Intent(this,GPSService::class.java))
+        }
+
+        button2.setOnClickListener {
+            val handler = Handler()
+            val timertask = object : TimerTask() {
+                override fun run() {
+                    handler.post(){
+                        startService(
+                            Intent(
+                                this@MainActivity,
+                                Service::class.java
+                            )
+                        )
+                    }
+                }
+            }
+            val timer = Timer()
+            timer.schedule(timertask, 0, 10000)
         }
     }
 }
