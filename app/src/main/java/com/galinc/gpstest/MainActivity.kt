@@ -45,7 +45,8 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.INTERNET,
             READ_EXTERNAL_STORAGE,
-            WRITE_EXTERNAL_STORAGE
+            WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.FOREGROUND_SERVICE
         ), 5)
 
 //        requestPermissions(arrayOf(READ_EXTERNAL_STORAGE), 2)
