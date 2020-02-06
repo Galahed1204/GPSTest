@@ -44,7 +44,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationCompat.PRIORITY_MIN
+import androidx.core.app.NotificationCompat.PRIORITY_HIGH
+import androidx.core.app.NotificationCompat.PRIORITY_MAX
 
 
 val LOG_TAG = "gps1"
@@ -67,7 +68,7 @@ class GPSService:IntentService("HelloIntentService"){
 //                    "Location changed: Lat: " + location.getLatitude() + " Lng: "
 //                            + location.getLongitude()
 //                )
-                val msg = "Location changed: Lat: " + location.getLatitude() + " Lng: " + location.getLongitude()
+                val msg = "Location changed: Lat: " + location.latitude + " Lng: " + location.longitude
                 Log.d(LOG_TAG,msg)
                 if (file.exists()){
                     val gpxfile = File(file, "gpslogs.txt")
@@ -78,11 +79,9 @@ class GPSService:IntentService("HelloIntentService"){
             }
 
             override fun onStatusChanged(s: String, i: Int, bundle: Bundle) {
-
             }
 
             override fun onProviderEnabled(s: String) {
-
             }
 
             override fun onProviderDisabled(s: String) {
@@ -90,28 +89,13 @@ class GPSService:IntentService("HelloIntentService"){
             }
         }
 
-        val channelId =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                createNotificationChannel("my_service", "My GPS Service")
-            } else {
-                // If earlier version channel ID is not used
-                // https://developer.android.com/reference/android/support/v4/app/NotificationCompat.Builder.html#NotificationCompat.Builder(android.content.Context)
-                ""
-            }
 
-        val notificationBuilder = NotificationCompat.Builder(this, channelId )
-        val notification = notificationBuilder.setOngoing(true)
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setPriority(PRIORITY_MIN)
-            .setCategory(Notification.CATEGORY_SERVICE)
-            .build()
-
-        startForeground(1333,notification)
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel(channelId: String, channelName: String): String{
         val chan = NotificationChannel(channelId,
-            channelName, NotificationManager.IMPORTANCE_NONE)
+            channelName, NotificationManager.IMPORTANCE_HIGH)
         chan.lightColor = Color.CYAN
         chan.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
         val service = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -122,13 +106,11 @@ class GPSService:IntentService("HelloIntentService"){
     override fun onHandleIntent(intent: Intent?) {
 
 
-//        ActivityCompat.requestPermissions(,arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 2)
-//        if (checkSelfPermission("ACCESS_FINE_LOCATION") == PackageManager.PERMISSION_GRANTED)
+
         val path:File = Environment.getExternalStorageDirectory()
         file = File(path, "Download")
-//        file.mkdir()
-        Notification()
-        //startForeground(ONGOING_NOTIFICATION_ID,Notification())
+
+
 
 //        for (i in 1..100)
 //        handler.postDelayed({
@@ -152,6 +134,22 @@ class GPSService:IntentService("HelloIntentService"){
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 //        super.onStartCommand(intent, flags, startId)
+        val channelId =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                createNotificationChannel("my_service", "My GPS Service")
+            } else {
+                ""
+            }
+
+        val notificationBuilder = NotificationCompat.Builder(this, channelId )
+        val notification = notificationBuilder.setOngoing(true)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setPriority(PRIORITY_MAX)
+            .setCategory(Notification.CATEGORY_SERVICE)
+            .build()
+
+        startForeground(1333,notification)
+        //intent.extras[]
         val run = NewRun()
         Thread(run).start()
         return Service.START_STICKY
@@ -168,8 +166,6 @@ class GPSService:IntentService("HelloIntentService"){
         override fun run() {
             val path:File = Environment.getExternalStorageDirectory()
             file = File(path, "Download")
-//        file.mkdir()
-
             //startForeground(ONGOING_NOTIFICATION_ID,Notification())
 
             while (true){

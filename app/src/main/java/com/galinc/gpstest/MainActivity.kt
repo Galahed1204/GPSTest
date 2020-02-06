@@ -81,25 +81,25 @@ class MainActivity : AppCompatActivity() {
 
     fun configureButton() {
         // first check for permissions
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(
-                    arrayOf(
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.INTERNET
-                    ), 10
-                )
-            }
-            return
-        }
+//        if (ActivityCompat.checkSelfPermission(
+//                this,
+//                Manifest.permission.ACCESS_FINE_LOCATION
+//            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+//                this,
+//                Manifest.permission.ACCESS_COARSE_LOCATION
+//            ) != PackageManager.PERMISSION_GRANTED
+//        ) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                requestPermissions(
+//                    arrayOf(
+//                        Manifest.permission.ACCESS_COARSE_LOCATION,
+//                        Manifest.permission.ACCESS_FINE_LOCATION,
+//                        Manifest.permission.INTERNET
+//                    ), 10
+//                )
+//            }
+//            return
+//        }
 
         button.setOnClickListener {
 //            locationManager.requestLocationUpdates(
@@ -114,26 +114,33 @@ class MainActivity : AppCompatActivity() {
 //                .setContentText("Notification text")
 //
 //            val notification = builder.build()
-            startForegroundService(Intent(this,GPSService::class.java))
+            val serviceGPS = Intent(this,GPSService::class.java).putExtra("writeFile",checkBox_logs.isChecked)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(serviceGPS)
+            } else {
+                startService(serviceGPS)
+            }
+
 //            startService(Intent(this,GPSService::class.java))
         }
 
         button2.setOnClickListener {
-            val handler = Handler()
-            val timertask = object : TimerTask() {
-                override fun run() {
-                    handler.post(){
-                        startService(
-                            Intent(
-                                this@MainActivity,
-                                Service::class.java
-                            )
-                        )
-                    }
-                }
-            }
-            val timer = Timer()
-            timer.schedule(timertask, 0, 10000)
+            stopService(Intent(this,GPSService::class.java))
+//            val handler = Handler()
+//            val timertask = object : TimerTask() {
+//                override fun run() {
+//                    handler.post(){
+//                        startService(
+//                            Intent(
+//                                this@MainActivity,
+//                                Service::class.java
+//                            )
+//                        )
+//                    }
+//                }
+//            }
+//            val timer = Timer()
+//            timer.schedule(timertask, 0, 10000)
         }
     }
 }
