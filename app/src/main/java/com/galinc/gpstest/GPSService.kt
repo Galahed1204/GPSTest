@@ -46,6 +46,10 @@ import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat.PRIORITY_HIGH
 import androidx.core.app.NotificationCompat.PRIORITY_MAX
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 val LOG_TAG = "gps1"
@@ -57,6 +61,7 @@ class GPSService:IntentService("HelloIntentService"){
     private lateinit var locationManager: LocationManager
     private lateinit var file: File
     val handler = Handler()
+    private var writeFile= false
 
     override fun onCreate() {
         super.onCreate()
@@ -68,8 +73,12 @@ class GPSService:IntentService("HelloIntentService"){
 //                    "Location changed: Lat: " + location.getLatitude() + " Lng: "
 //                            + location.getLongitude()
 //                )
+                val dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd")
+                val dtftime = DateTimeFormatter.ofPattern(" HH:mm:ss")
+                val now = LocalDateTime.now()
                 val msg = "Location changed: Lat: " + location.latitude + " Lng: " + location.longitude
-                Log.d(LOG_TAG,msg)
+//                Log.d(LOG_TAG,msg)
+
                 if (file.exists()){
                     val gpxfile = File(file, "gpslogs.txt")
                     val myOutWriter = OutputStreamWriter(FileOutputStream(gpxfile,true))
@@ -109,7 +118,7 @@ class GPSService:IntentService("HelloIntentService"){
 
         val path:File = Environment.getExternalStorageDirectory()
         file = File(path, "Download")
-
+        if (intent!!.getBundleExtra("writeFile") != null) writeFile = true
 
 
 //        for (i in 1..100)
