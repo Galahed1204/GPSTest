@@ -73,14 +73,15 @@ class GPSService:IntentService("HelloIntentService"){
 //                    "Location changed: Lat: " + location.getLatitude() + " Lng: "
 //                            + location.getLongitude()
 //                )
-                val dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd")
+                val dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd")
                 val dtftime = DateTimeFormatter.ofPattern(" HH:mm:ss")
                 val now = LocalDateTime.now()
-                val msg = "Location changed: Lat: " + location.latitude + " Lng: " + location.longitude
-//                Log.d(LOG_TAG,msg)
+                dtf.format(now)
+                val msg = "${dtftime.format(now)}: Lat: " + location.latitude + " Lng: " + location.longitude
+                Log.d(LOG_TAG,msg)
 
-                if (file.exists()){
-                    val gpxfile = File(file, "gpslogs.txt")
+                if (file.exists() && writeFile){
+                    val gpxfile = File(file, "gpslogs ${dtf.format(now)}.txt")
                     val myOutWriter = OutputStreamWriter(FileOutputStream(gpxfile,true))
                     myOutWriter.use { myOutWriter.append(msg + "\n") }
 
@@ -118,7 +119,7 @@ class GPSService:IntentService("HelloIntentService"){
 
         val path:File = Environment.getExternalStorageDirectory()
         file = File(path, "Download")
-        if (intent!!.getBundleExtra("writeFile") != null) writeFile = true
+//        if (intent!!.getBundleExtra("writeFile") != null) writeFile = true
 
 
 //        for (i in 1..100)
@@ -150,6 +151,8 @@ class GPSService:IntentService("HelloIntentService"){
                 ""
             }
 
+        if (intent != null) writeFile = intent.getBooleanExtra("writeFile",false)
+
         val notificationBuilder = NotificationCompat.Builder(this, channelId )
         val notification = notificationBuilder.setOngoing(true)
             .setSmallIcon(R.mipmap.ic_launcher)
@@ -158,17 +161,11 @@ class GPSService:IntentService("HelloIntentService"){
             .build()
 
         startForeground(1333,notification)
-        //intent.extras[]
         val run = NewRun()
         Thread(run).start()
         return Service.START_STICKY
     }
 
-    //    override fun onBind(intent: Intent?): IBinder? {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//
-//
-//    }
 
     internal inner class NewRun:Runnable{
 
